@@ -24,4 +24,50 @@ Source files live under `src/`. The final EA entry file lives at `src/Experts/FX
 3. Compile the EA with MetaEditor or a scripted build step.
 4. Backtest in MetaTrader 5 Strategy Tester.
 
-The copy and build scripts are placeholders for now. They intentionally do not guess the local MT5 installation path.
+## Local MT5 Setup
+
+The exact MetaTrader paths are local to each user. Do not commit local terminal paths, account details, broker logins, investor passwords, API keys, or secrets.
+
+To find the MT5 data folder:
+
+1. Open MetaTrader 5.
+2. Select `File` -> `Open Data Folder`.
+3. Use the `MQL5` folder inside that data folder as `Mt5Mql5Path`.
+
+To find `MetaEditor64.exe`, check the MetaTrader 5 installation folder. Common locations are under `C:\Program Files\...`, but the exact path depends on how MT5 was installed.
+
+This workspace can load local defaults from `tools/local-settings.ps1`. That file is ignored by Git and should contain only machine-local paths:
+
+```powershell
+$FXTR1_DefaultMt5Mql5Path = "C:\Users\<you>\AppData\Roaming\MetaQuotes\Terminal\<terminal-id>\MQL5"
+$FXTR1_DefaultMetaEditorPath = "C:\Program Files\<broker-or-mt5-folder>\MetaEditor64.exe"
+```
+
+Copy source files into the MT5 data folder:
+
+```powershell
+.\tools\copy-to-mt5.ps1
+```
+
+Or override the local default:
+
+```powershell
+.\tools\copy-to-mt5.ps1 `
+  -Mt5Mql5Path "C:\Users\<you>\AppData\Roaming\MetaQuotes\Terminal\<terminal-id>\MQL5"
+```
+
+Build and compile the EA with MetaEditor:
+
+```powershell
+.\tools\build.ps1
+```
+
+Or override the local defaults:
+
+```powershell
+.\tools\build.ps1 `
+  -MetaEditorPath "C:\Program Files\<broker-or-mt5-folder>\MetaEditor64.exe" `
+  -Mt5Mql5Path "C:\Users\<you>\AppData\Roaming\MetaQuotes\Terminal\<terminal-id>\MQL5"
+```
+
+Compiler output is written to `build/FXTR1_EA.log`.
