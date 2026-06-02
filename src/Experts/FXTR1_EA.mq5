@@ -1,6 +1,6 @@
 #property copyright "FXTR1"
 #property link      ""
-#property version   "0.01"
+#property version   "1.00"
 #property strict
 
 #include <FXTR1/Core/Engine.mqh>
