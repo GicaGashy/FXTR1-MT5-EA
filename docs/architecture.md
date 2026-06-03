@@ -105,6 +105,12 @@ Initial constraints:
 - No unsafe lot scaling.
 - No hidden recovery sizing.
 
+### Spread Filter
+
+`CFXTR1SpreadFilter` is the first modular risk check. It validates the current market spread against `MaxSpreadPoints` from runtime settings.
+
+`MaxSpreadPoints` defaults to `0`, which disables the spread filter. Passing the spread filter does not approve a trade yet because lot sizing and stop-loss/take-profit validation are not implemented.
+
 ## Trade Executor
 
 The trade executor will isolate order placement and trade modification mechanics from strategies and risk rules.
