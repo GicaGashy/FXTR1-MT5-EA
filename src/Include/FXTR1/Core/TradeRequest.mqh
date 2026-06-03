@@ -32,7 +32,7 @@ public:
       Reason = "";
    }
 
-   bool CanExecute()
+   bool CanExecute() const
    {
       return IsValid
              && (Direction == FXTR1_DIRECTION_BUY || Direction == FXTR1_DIRECTION_SELL)

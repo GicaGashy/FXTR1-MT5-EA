@@ -43,11 +43,14 @@ The planned future trading flow is intentionally staged so that each module has 
 4. Risk decision records whether the signal was approved or rejected and why.
 5. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
 6. Trade executor executes only approved executable trade requests.
-7. Position manager manages open trades after execution.
+7. Trade executor returns a `CFXTR1ExecutionResult`.
+8. Position manager manages open trades after execution.
 
 `CFXTR1StrategySignal` is not executed directly. It is an intent object from a strategy, and future risk checks must approve or prepare it before it can become a `CFXTR1TradeRequest`.
 
 `CFXTR1TradeExecutor` should eventually only receive approved requests where the `CFXTR1RiskDecision` is executable.
+
+`CFXTR1ExecutionResult` provides structured execution feedback. Broker retcodes, order tickets, deal tickets, and position tickets will be captured there later when real execution is implemented.
 
 This flow is architectural only at this stage. No concrete strategy, order placement, or position management behavior is implemented yet.
 

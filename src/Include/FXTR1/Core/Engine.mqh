@@ -60,7 +60,9 @@ public:
          return;
       }
 
-      m_trade_executor.Execute(decision.Request);
+      CFXTR1ExecutionResult execution_result = m_trade_executor.Execute(decision.Request);
+      if(!execution_result.IsSuccess())
+         m_logger.Error("Trade execution failed: " + execution_result.Message);
    }
 };
 
