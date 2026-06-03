@@ -1,6 +1,7 @@
 #ifndef FXTR1_STRATEGY_STRATEGYMANAGER_MQH
 #define FXTR1_STRATEGY_STRATEGYMANAGER_MQH
 
+#include <FXTR1/Core/MarketSnapshot.mqh>
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Strategy/StrategyMode.mqh>
 #include <FXTR1/Strategy/NullStrategy.mqh>
@@ -61,7 +62,7 @@ public:
       m_initialized = false;
    }
 
-   CFXTR1StrategySignal Evaluate()
+   CFXTR1StrategySignal Evaluate(const CFXTR1MarketSnapshot &market)
    {
       CFXTR1StrategySignal signal;
 
@@ -69,7 +70,7 @@ public:
          return signal;
 
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_NULL)
-         return m_null_strategy.Evaluate();
+         return m_null_strategy.Evaluate(market);
 
       return signal;
    }

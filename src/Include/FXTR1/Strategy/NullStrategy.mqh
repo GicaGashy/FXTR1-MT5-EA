@@ -15,7 +15,7 @@ public:
    {
    }
 
-   CFXTR1StrategySignal Evaluate()
+   CFXTR1StrategySignal Evaluate(const CFXTR1MarketSnapshot &market)
    {
       CFXTR1StrategySignal signal;
       return signal;

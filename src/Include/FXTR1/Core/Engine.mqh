@@ -1,6 +1,7 @@
 #ifndef FXTR1_CORE_ENGINE_MQH
 #define FXTR1_CORE_ENGINE_MQH
 
+#include <FXTR1/Core/MarketDataProvider.mqh>
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskManager.mqh>
@@ -14,6 +15,7 @@ class CFXTR1Engine
 private:
    CFXTR1Logger        m_logger;
    CFXTR1Settings      m_settings;
+   CFXTR1MarketDataProvider m_market_data;
    CFXTR1RiskManager   m_risk_manager;
    CFXTR1StrategyManager m_strategy_manager;
    CFXTR1SignalResolver m_signal_resolver;
@@ -79,7 +81,11 @@ public:
       if(!m_initialized)
          return;
 
-      CFXTR1StrategySignal raw_signal = m_strategy_manager.Evaluate();
+      CFXTR1MarketSnapshot market = m_market_data.Capture(m_settings);
+      if(!market.IsValid)
+         return;
+
+      CFXTR1StrategySignal raw_signal = m_strategy_manager.Evaluate(market);
       CFXTR1SignalResolutionResult resolution = m_signal_resolver.Resolve(raw_signal);
 
       if(!raw_signal.HasSignal())
