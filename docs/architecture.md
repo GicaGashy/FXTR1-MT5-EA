@@ -34,8 +34,11 @@ The planned future trading flow is intentionally staged so that each module has 
 1. Strategy evaluates the market.
 2. Strategy returns a `CFXTR1StrategySignal`.
 3. Risk manager validates the signal and account constraints.
-4. Trade executor executes only validated actions.
-5. Position manager manages open trades after execution.
+4. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
+5. Trade executor executes only validated trade requests.
+6. Position manager manages open trades after execution.
+
+`CFXTR1StrategySignal` is not executed directly. It is an intent object from a strategy, and future risk checks must approve or prepare it before it can become a `CFXTR1TradeRequest`.
 
 This flow is architectural only at this stage. No concrete strategy, order placement, or position management behavior is implemented yet.
 
