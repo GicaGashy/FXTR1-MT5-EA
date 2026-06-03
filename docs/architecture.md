@@ -33,6 +33,14 @@ Current status:
 
 `CFXTR1NullStrategy` must never produce trade signals. Its `Evaluate()` method returns an empty `CFXTR1StrategySignal`, so the engine stops before risk evaluation or trade execution during normal ticks.
 
+## Runtime Settings and Safety Switches
+
+Runtime settings are centralized in `CFXTR1Settings` and are passed from `src/Experts/FXTR1_EA.mq5` inputs into the core engine during initialization. The engine stores this configuration and uses it as an explicit gate before any future signal can proceed to risk evaluation.
+
+`TradingEnabled` and `AllowNewEntries` both default to `false`. A future strategy signal may only proceed when both switches are enabled and a symbol is configured.
+
+These defaults protect against accidental future execution while the project is still a skeleton. They ensure new strategy, risk, or execution modules must opt in through reviewable runtime settings before trade flow can advance.
+
 ## Core Trading Flow
 
 The planned future trading flow is intentionally staged so that each module has one clear responsibility:

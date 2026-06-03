@@ -1,6 +1,7 @@
 #ifndef FXTR1_CORE_ENGINE_MQH
 #define FXTR1_CORE_ENGINE_MQH
 
+#include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskManager.mqh>
 #include <FXTR1/Strategy/NullStrategy.mqh>
@@ -11,10 +12,16 @@ class CFXTR1Engine
 {
 private:
    CFXTR1Logger        m_logger;
+   CFXTR1Settings      m_settings;
    CFXTR1RiskManager   m_risk_manager;
    CFXTR1NullStrategy  m_strategy;
    CFXTR1TradeExecutor m_trade_executor;
    bool                m_initialized;
+
+   string BoolText(const bool value) const
+   {
+      return value ? "true" : "false";
+   }
 
 public:
    CFXTR1Engine()
@@ -22,9 +29,26 @@ public:
       m_initialized = false;
    }
 
+   void Configure(const CFXTR1Settings &settings)
+   {
+      m_settings.ExpertName = settings.ExpertName;
+      m_settings.Symbol = settings.Symbol;
+      m_settings.Timeframe = settings.Timeframe;
+      m_settings.MagicNumber = settings.MagicNumber;
+      m_settings.TradingEnabled = settings.TradingEnabled;
+      m_settings.AllowNewEntries = settings.AllowNewEntries;
+      m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
+   }
+
    int OnInit()
    {
       m_logger.Info("Initializing FXTR1 engine");
+      m_logger.Info("Expert name=" + m_settings.ExpertName);
+      m_logger.Info("Symbol=" + m_settings.Symbol);
+      m_logger.Info("Timeframe=" + EnumToString(m_settings.Timeframe));
+      m_logger.Info("Magic number=" + StringFormat("%I64u", m_settings.MagicNumber));
+      m_logger.Info("Trading enabled=" + BoolText(m_settings.TradingEnabled));
+      m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
 
       if(!m_strategy.Initialize())
       {
@@ -52,6 +76,17 @@ public:
       CFXTR1StrategySignal signal = m_strategy.Evaluate();
       if(!signal.HasSignal())
          return;
+
+      if(!m_settings.CanOpenNewTrades())
+      {
+         m_logger.Info("New trade blocked by runtime settings: trading_enabled="
+                       + BoolText(m_settings.TradingEnabled)
+                       + ", allow_new_entries="
+                       + BoolText(m_settings.AllowNewEntries)
+                       + ", symbol="
+                       + m_settings.Symbol);
+         return;
+      }
 
       CFXTR1RiskDecision decision = m_risk_manager.EvaluateSignal(signal);
       if(!decision.CanExecute())
