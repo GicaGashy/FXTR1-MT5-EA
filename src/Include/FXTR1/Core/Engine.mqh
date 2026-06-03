@@ -4,6 +4,7 @@
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskManager.mqh>
+#include <FXTR1/Strategy/SignalResolver.mqh>
 #include <FXTR1/Strategy/StrategyManager.mqh>
 #include <FXTR1/Trade/TradeExecutor.mqh>
 #include <FXTR1/Utils/Logger.mqh>
@@ -15,6 +16,7 @@ private:
    CFXTR1Settings      m_settings;
    CFXTR1RiskManager   m_risk_manager;
    CFXTR1StrategyManager m_strategy_manager;
+   CFXTR1SignalResolver m_signal_resolver;
    CFXTR1TradeExecutor m_trade_executor;
    bool                m_initialized;
 
@@ -77,9 +79,19 @@ public:
       if(!m_initialized)
          return;
 
-      CFXTR1StrategySignal signal = m_strategy_manager.Evaluate();
-      if(!signal.HasSignal())
+      CFXTR1StrategySignal raw_signal = m_strategy_manager.Evaluate();
+      CFXTR1SignalResolutionResult resolution = m_signal_resolver.Resolve(raw_signal);
+
+      if(!raw_signal.HasSignal())
          return;
+
+      if(!resolution.HasAcceptedSignal())
+      {
+         m_logger.Info("Signal rejected by resolver: " + resolution.RejectReason);
+         return;
+      }
+
+      CFXTR1StrategySignal signal = resolution.Signal;
 
       if(!m_settings.CanOpenNewTrades())
       {

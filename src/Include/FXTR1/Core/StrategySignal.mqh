@@ -19,12 +19,12 @@ public:
       Clear();
    }
 
-   bool HasSignal()
+   bool HasSignal() const
    {
       return Type != FXTR1_SIGNAL_NONE;
    }
 
-   bool IsEntrySignal()
+   bool IsEntrySignal() const
    {
       return Type == FXTR1_SIGNAL_ENTRY && Direction != FXTR1_DIRECTION_NONE;
    }

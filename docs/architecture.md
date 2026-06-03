@@ -41,6 +41,12 @@ Future strategies will be added as plug-and-play modules behind the strategy con
 
 Only `CFXTR1NullStrategy` is currently supported. Future strategies will be plugged into `CFXTR1StrategyManager`, not directly into the engine, so the engine can keep coordinating the safe trading flow without knowing concrete strategy modules.
 
+## SignalResolver
+
+`CFXTR1SignalResolver` decides which strategy signal, if any, survives before runtime settings and risk checks are evaluated. The current resolver is only a safe single-signal pass-through: no signal returns quietly, and one valid signal is accepted unchanged.
+
+Future voting, priority, and conflict handling belong in `CFXTR1SignalResolver`, not in the engine, risk manager, or trade executor.
+
 ## NullStrategy
 
 `CFXTR1NullStrategy` is the current engine strategy implementation. It exists only to wire and compile-test the engine flow safely while the real architecture is being defined.
@@ -59,14 +65,16 @@ These defaults protect against accidental future execution while the project is 
 
 The planned future trading flow is intentionally staged so that each module has one clear responsibility:
 
-1. Strategy evaluates the market.
+1. StrategyManager collects or produces strategy signals from the active strategy module.
 2. Strategy returns a `CFXTR1StrategySignal`.
-3. Risk manager evaluates the signal and account constraints into a `CFXTR1RiskDecision`.
-4. Risk decision records whether the signal was approved or rejected and why.
-5. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
-6. Trade executor executes only approved executable trade requests.
-7. Trade executor returns a `CFXTR1ExecutionResult`.
-8. Position manager manages open trades after execution.
+3. SignalResolver decides which signal, if any, survives.
+4. Runtime settings and safety switches gate any accepted signal before risk evaluation.
+5. Risk manager evaluates the signal and account constraints into a `CFXTR1RiskDecision`.
+6. Risk decision records whether the signal was approved or rejected and why.
+7. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
+8. Trade executor executes only approved executable trade requests.
+9. Trade executor returns a `CFXTR1ExecutionResult`.
+10. Position manager manages open trades after execution.
 
 `CFXTR1StrategySignal` is not executed directly. It is an intent object from a strategy, and future risk checks must approve or prepare it before it can become a `CFXTR1TradeRequest`.
 
