@@ -13,6 +13,7 @@ public:
    bool            TradingEnabled;
    bool            AllowNewEntries;
    int             MaxSpreadPoints;
+   double          FixedVolume;
    ENUM_FXTR1_STRATEGY_MODE StrategyMode;
 
    CFXTR1Settings()
@@ -29,6 +30,7 @@ public:
       TradingEnabled = false;
       AllowNewEntries = false;
       MaxSpreadPoints = 0;
+      FixedVolume = 0.0;
       StrategyMode = FXTR1_STRATEGY_MODE_NULL;
    }
 

@@ -1,6 +1,7 @@
 #ifndef FXTR1_RISK_RISKMANAGER_MQH
 #define FXTR1_RISK_RISKMANAGER_MQH
 
+#include <FXTR1/Risk/FixedVolumeSizer.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskEvaluationRequest.mqh>
 #include <FXTR1/Risk/SignalValidator.mqh>
@@ -15,6 +16,7 @@ private:
    CFXTR1TradeModeValidator m_trade_mode_validator;
    CFXTR1StopDistanceValidator m_stop_distance_validator;
    CFXTR1SpreadFilter m_spread_filter;
+   CFXTR1FixedVolumeSizer m_fixed_volume_sizer;
 
 public:
    CFXTR1RiskManager()
@@ -74,6 +76,13 @@ public:
       if(!spread_check.IsPassed())
       {
          decision.RejectReason = spread_check.Message;
+         return decision;
+      }
+
+      CFXTR1PositionSizeResult size_result = m_fixed_volume_sizer.Calculate(request);
+      if(!size_result.IsSuccess())
+      {
+         decision.RejectReason = size_result.Message;
          return decision;
       }
 

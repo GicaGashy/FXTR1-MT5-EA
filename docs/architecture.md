@@ -135,6 +135,12 @@ This validator currently assumes future market-order execution only. Passing it 
 
 `MaxSpreadPoints` defaults to `0`, which disables the spread filter. Passing the spread filter does not approve a trade yet because lot sizing and stop-loss/take-profit validation are not implemented.
 
+### Fixed Volume Sizer
+
+`FixedVolume` is configured through EA inputs and defaults to `0.0`, so sizing fails safely until explicitly configured. `CFXTR1FixedVolumeSizer` validates the configured volume against broker minimum volume, maximum volume, and volume step.
+
+The sizer does not silently normalize volume yet. Passing fixed-volume sizing still does not approve a trade.
+
 ## Trade Executor
 
 The trade executor will isolate order placement and trade modification mechanics from strategies and risk rules.
