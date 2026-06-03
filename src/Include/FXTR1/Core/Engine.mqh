@@ -4,6 +4,7 @@
 #include <FXTR1/Core/MarketDataProvider.mqh>
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
+#include <FXTR1/Risk/RiskEvaluationRequest.mqh>
 #include <FXTR1/Risk/RiskManager.mqh>
 #include <FXTR1/Strategy/SignalResolver.mqh>
 #include <FXTR1/Strategy/StrategyManager.mqh>
@@ -110,7 +111,12 @@ public:
          return;
       }
 
-      CFXTR1RiskDecision decision = m_risk_manager.EvaluateSignal(signal);
+      CFXTR1RiskEvaluationRequest risk_request;
+      risk_request.Settings = m_settings;
+      risk_request.Market = market;
+      risk_request.Signal = signal;
+
+      CFXTR1RiskDecision decision = m_risk_manager.Evaluate(risk_request);
       if(!decision.CanExecute())
       {
          m_logger.Info("Risk rejected signal: " + decision.RejectReason);

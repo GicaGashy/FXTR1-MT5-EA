@@ -76,14 +76,17 @@ The planned future trading flow is intentionally staged so that each module has 
 3. Strategy returns a `CFXTR1StrategySignal`.
 4. SignalResolver decides which signal, if any, survives.
 5. Runtime settings and safety switches gate any accepted signal before risk evaluation.
-6. Risk manager evaluates the signal and account constraints into a `CFXTR1RiskDecision`.
-7. Risk decision records whether the signal was approved or rejected and why.
-8. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
-9. Trade executor executes only approved executable trade requests.
-10. Trade executor returns a `CFXTR1ExecutionResult`.
-11. Position manager manages open trades after execution.
+6. Engine builds a `CFXTR1RiskEvaluationRequest` from the resolved signal, market snapshot, and runtime settings.
+7. Risk manager evaluates the request into a `CFXTR1RiskDecision`.
+8. Risk decision records whether the signal was approved or rejected and why.
+9. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
+10. Trade executor executes only approved executable trade requests.
+11. Trade executor returns a `CFXTR1ExecutionResult`.
+12. Position manager manages open trades after execution.
 
 `CFXTR1StrategySignal` is not executed directly. It is an intent object from a strategy, and future risk checks must approve or prepare it before it can become a `CFXTR1TradeRequest`.
+
+`CFXTR1RiskEvaluationRequest` makes risk inputs explicit: risk evaluation requires the resolved strategy signal, the current market snapshot, and runtime settings. This avoids hidden global state and prepares the EA for future spread, symbol, stop-loss, take-profit, and lot-size validation without scattering those checks across strategy, engine, or execution code.
 
 `CFXTR1TradeExecutor` should eventually only receive approved requests where the `CFXTR1RiskDecision` is executable.
 

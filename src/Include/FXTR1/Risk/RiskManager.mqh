@@ -1,8 +1,8 @@
 #ifndef FXTR1_RISK_RISKMANAGER_MQH
 #define FXTR1_RISK_RISKMANAGER_MQH
 
-#include <FXTR1/Core/StrategySignal.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
+#include <FXTR1/Risk/RiskEvaluationRequest.mqh>
 
 class CFXTR1RiskManager
 {
@@ -17,14 +17,29 @@ public:
       return false;
    }
 
-   CFXTR1RiskDecision EvaluateSignal(const CFXTR1StrategySignal &signal)
+   CFXTR1RiskDecision Evaluate(const CFXTR1RiskEvaluationRequest &request)
    {
       CFXTR1RiskDecision decision;
 
-      if(signal.Type == FXTR1_SIGNAL_NONE)
+      if(!request.HasSignal())
+      {
          decision.RejectReason = "No strategy signal.";
-      else
-         decision.RejectReason = "Risk evaluation is not implemented yet.";
+         return decision;
+      }
+
+      if(!request.HasValidMarket())
+      {
+         decision.RejectReason = "Invalid market snapshot.";
+         return decision;
+      }
+
+      if(!request.Settings.HasValidSymbol())
+      {
+         decision.RejectReason = "Invalid settings symbol.";
+         return decision;
+      }
+
+      decision.RejectReason = "Risk evaluation is not implemented yet.";
 
       return decision;
    }
