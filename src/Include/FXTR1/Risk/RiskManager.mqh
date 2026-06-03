@@ -4,12 +4,14 @@
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskEvaluationRequest.mqh>
 #include <FXTR1/Risk/SignalValidator.mqh>
+#include <FXTR1/Risk/StopDistanceValidator.mqh>
 #include <FXTR1/Risk/SpreadFilter.mqh>
 
 class CFXTR1RiskManager
 {
 private:
    CFXTR1SignalValidator m_signal_validator;
+   CFXTR1StopDistanceValidator m_stop_distance_validator;
    CFXTR1SpreadFilter m_spread_filter;
 
 public:
@@ -49,6 +51,13 @@ public:
       if(!signal_check.IsPassed())
       {
          decision.RejectReason = signal_check.Message;
+         return decision;
+      }
+
+      CFXTR1RiskCheckResult stop_distance_check = m_stop_distance_validator.Check(request);
+      if(!stop_distance_check.IsPassed())
+      {
+         decision.RejectReason = stop_distance_check.Message;
          return decision;
       }
 

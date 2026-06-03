@@ -117,6 +117,12 @@ Initial constraints:
 
 Take profit is optional for now, but when provided it must be on the correct side of the entry reference. Passing `CFXTR1SignalValidator` does not approve a trade yet.
 
+### Stop Distance Validator
+
+`CFXTR1StopDistanceValidator` validates stop-loss and optional take-profit distances against broker stop-level constraints. BUY validation uses Bid as the close/reference price, and SELL validation uses Ask as the close/reference price.
+
+This validator currently assumes future market-order execution only. Passing it still does not approve a trade.
+
 ### Spread Filter
 
 `CFXTR1SpreadFilter` is the first modular risk check. It validates the current market spread against `MaxSpreadPoints` from runtime settings.
