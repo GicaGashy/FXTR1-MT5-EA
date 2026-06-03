@@ -1,6 +1,8 @@
 #ifndef FXTR1_CORE_SETTINGS_MQH
 #define FXTR1_CORE_SETTINGS_MQH
 
+#include <FXTR1/Strategy/StrategyMode.mqh>
+
 class CFXTR1Settings
 {
 public:
@@ -11,6 +13,7 @@ public:
    bool            TradingEnabled;
    bool            AllowNewEntries;
    int             MaxSpreadPoints;
+   ENUM_FXTR1_STRATEGY_MODE StrategyMode;
 
    CFXTR1Settings()
    {
@@ -26,6 +29,7 @@ public:
       TradingEnabled = false;
       AllowNewEntries = false;
       MaxSpreadPoints = 0;
+      StrategyMode = FXTR1_STRATEGY_MODE_NULL;
    }
 
    bool HasValidSymbol() const

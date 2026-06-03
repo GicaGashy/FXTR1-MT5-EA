@@ -10,6 +10,7 @@ input bool  InpTradingEnabled = false;
 input bool  InpAllowNewEntries = false;
 input ulong InpMagicNumber = 1001001;
 input int   InpMaxSpreadPoints = 0;
+input ENUM_FXTR1_STRATEGY_MODE InpStrategyMode = FXTR1_STRATEGY_MODE_NULL;
 
 CFXTR1Engine g_engine;
 
@@ -23,6 +24,7 @@ int OnInit()
    settings.TradingEnabled = InpTradingEnabled;
    settings.AllowNewEntries = InpAllowNewEntries;
    settings.MaxSpreadPoints = InpMaxSpreadPoints;
+   settings.StrategyMode = InpStrategyMode;
 
    g_engine.Configure(settings);
    return g_engine.OnInit();

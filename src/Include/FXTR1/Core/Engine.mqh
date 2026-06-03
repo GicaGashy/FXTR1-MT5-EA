@@ -38,6 +38,7 @@ public:
       m_settings.TradingEnabled = settings.TradingEnabled;
       m_settings.AllowNewEntries = settings.AllowNewEntries;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
+      m_settings.StrategyMode = settings.StrategyMode;
    }
 
    int OnInit()
@@ -49,6 +50,14 @@ public:
       m_logger.Info("Magic number=" + StringFormat("%I64u", m_settings.MagicNumber));
       m_logger.Info("Trading enabled=" + BoolText(m_settings.TradingEnabled));
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
+      m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
+
+      if(m_settings.StrategyMode != FXTR1_STRATEGY_MODE_NULL)
+      {
+         m_logger.Error("Unsupported strategy mode: " + FXTR1StrategyModeToString(m_settings.StrategyMode));
+         m_initialized = false;
+         return INIT_FAILED;
+      }
 
       if(!m_strategy.Initialize())
       {

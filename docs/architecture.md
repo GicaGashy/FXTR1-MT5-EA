@@ -27,6 +27,14 @@ Current status:
 - No concrete strategy is implemented.
 - No signal generation is implemented.
 
+## Strategy Selection
+
+The EA exposes a strategy mode input and passes the selected value into `CFXTR1Settings` during initialization. The engine reads that setting before initializing the configured strategy module.
+
+Only `CFXTR1NullStrategy` is currently supported. Any unsupported mode is rejected during engine initialization, and no fallback strategy is selected implicitly.
+
+Future strategies will be added as plug-and-play modules behind the strategy contract. Strategy selection chooses which module is active; it is separate from any future signal resolution, voting, or multi-strategy orchestration.
+
 ## NullStrategy
 
 `CFXTR1NullStrategy` is the current engine strategy implementation. It exists only to wire and compile-test the engine flow safely while the real architecture is being defined.
