@@ -32,6 +32,7 @@ public:
       m_settings.AllowNewEntries = settings.AllowNewEntries;
       m_settings.RiskApprovalEnabled = settings.RiskApprovalEnabled;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
+      m_settings.MaxOpenPositions = settings.MaxOpenPositions;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
       m_settings.TestSignalEveryTicks = settings.TestSignalEveryTicks;

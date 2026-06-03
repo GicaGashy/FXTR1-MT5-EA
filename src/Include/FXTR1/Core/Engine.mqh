@@ -2,6 +2,7 @@
 #define FXTR1_CORE_ENGINE_MQH
 
 #include <FXTR1/Core/MarketDataProvider.mqh>
+#include <FXTR1/Core/PositionDataProvider.mqh>
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskEvaluationRequest.mqh>
@@ -17,6 +18,7 @@ private:
    CFXTR1Logger        m_logger;
    CFXTR1Settings      m_settings;
    CFXTR1MarketDataProvider m_market_data;
+   CFXTR1PositionDataProvider m_position_data;
    CFXTR1RiskManager   m_risk_manager;
    CFXTR1StrategyManager m_strategy_manager;
    CFXTR1SignalResolver m_signal_resolver;
@@ -55,6 +57,7 @@ public:
       m_settings.AllowNewEntries = settings.AllowNewEntries;
       m_settings.RiskApprovalEnabled = settings.RiskApprovalEnabled;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
+      m_settings.MaxOpenPositions = settings.MaxOpenPositions;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
       m_settings.TestSignalEveryTicks = settings.TestSignalEveryTicks;
@@ -75,6 +78,7 @@ public:
       m_logger.Info("Trading enabled=" + BoolText(m_settings.TradingEnabled));
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
       m_logger.Info("Risk approval enabled=" + BoolText(m_settings.RiskApprovalEnabled));
+      m_logger.Info("Max open positions=" + IntegerToString(m_settings.MaxOpenPositions));
       m_logger.Info("Fixed volume=" + DoubleToString(m_settings.FixedVolume, 8));
       m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
@@ -138,8 +142,10 @@ public:
       }
 
       CFXTR1RiskEvaluationRequest risk_request;
+      CFXTR1PositionSnapshot positions = m_position_data.Capture(m_settings);
       risk_request.Settings = m_settings;
       risk_request.Market = market;
+      risk_request.Positions = positions;
       risk_request.Signal = signal;
 
       CFXTR1RiskDecision decision = m_risk_manager.Evaluate(risk_request);

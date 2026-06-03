@@ -15,6 +15,7 @@ public:
    bool            AllowNewEntries;
    bool            RiskApprovalEnabled;
    int             MaxSpreadPoints;
+   int             MaxOpenPositions;
    double          FixedVolume;
    ENUM_FXTR1_STRATEGY_MODE StrategyMode;
    int             TestSignalEveryTicks;
@@ -37,6 +38,7 @@ public:
       AllowNewEntries = false;
       RiskApprovalEnabled = false;
       MaxSpreadPoints = 0;
+      MaxOpenPositions = 1;
       FixedVolume = 0.0;
       StrategyMode = FXTR1_STRATEGY_MODE_NULL;
       TestSignalEveryTicks = 100;

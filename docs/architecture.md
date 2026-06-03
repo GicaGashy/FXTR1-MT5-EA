@@ -129,6 +129,12 @@ Take profit is optional for now, but when provided it must be on the correct sid
 
 Passing this validator still does not approve a trade.
 
+### Position Limit Validator
+
+`CFXTR1PositionDataProvider` captures current open positions for the configured symbol and magic number. `MaxOpenPositions` defaults to `1`, and `CFXTR1PositionLimitValidator` rejects new entries when that maximum is reached.
+
+This protects the EA from opening repeated test-strategy entries every few ticks. It is still not position management, trailing stop, or exit logic.
+
 ### Stop Distance Validator
 
 `CFXTR1StopDistanceValidator` validates stop-loss and optional take-profit distances against broker stop-level constraints. BUY validation uses Bid as the close/reference price, and SELL validation uses Ask as the close/reference price.
