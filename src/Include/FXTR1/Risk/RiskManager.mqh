@@ -6,11 +6,13 @@
 #include <FXTR1/Risk/SignalValidator.mqh>
 #include <FXTR1/Risk/StopDistanceValidator.mqh>
 #include <FXTR1/Risk/SpreadFilter.mqh>
+#include <FXTR1/Risk/TradeModeValidator.mqh>
 
 class CFXTR1RiskManager
 {
 private:
    CFXTR1SignalValidator m_signal_validator;
+   CFXTR1TradeModeValidator m_trade_mode_validator;
    CFXTR1StopDistanceValidator m_stop_distance_validator;
    CFXTR1SpreadFilter m_spread_filter;
 
@@ -51,6 +53,13 @@ public:
       if(!signal_check.IsPassed())
       {
          decision.RejectReason = signal_check.Message;
+         return decision;
+      }
+
+      CFXTR1RiskCheckResult trade_mode_check = m_trade_mode_validator.Check(request);
+      if(!trade_mode_check.IsPassed())
+      {
+         decision.RejectReason = trade_mode_check.Message;
          return decision;
       }
 

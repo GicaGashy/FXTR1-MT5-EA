@@ -117,6 +117,12 @@ Initial constraints:
 
 Take profit is optional for now, but when provided it must be on the correct side of the entry reference. Passing `CFXTR1SignalValidator` does not approve a trade yet.
 
+### Trade Mode Validator
+
+`CFXTR1TradeModeValidator` checks whether the broker symbol trade mode allows the intended trade direction. Disabled and close-only modes reject new entries, long-only permits buys, short-only permits sells, and full mode permits both directions.
+
+Passing this validator still does not approve a trade.
+
 ### Stop Distance Validator
 
 `CFXTR1StopDistanceValidator` validates stop-loss and optional take-profit distances against broker stop-level constraints. BUY validation uses Bid as the close/reference price, and SELL validation uses Ask as the close/reference price.
