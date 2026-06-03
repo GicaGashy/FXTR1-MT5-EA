@@ -141,6 +141,12 @@ This validator currently assumes future market-order execution only. Passing it 
 
 The sizer does not silently normalize volume yet. Passing fixed-volume sizing still does not approve a trade.
 
+### Trade Request Builder
+
+`CFXTR1TradeRequestBuilder` converts a validated signal and validated volume into a prepared `CFXTR1TradeRequest`. When a signal does not provide `EntryPrice`, it uses Ask for BUY entries and Bid for SELL entries as the market reference price.
+
+Building a `CFXTR1TradeRequest` is not the same as approving a trade. `CFXTR1RiskDecision.Approved` remains `false` until explicit trade approval logic is implemented, and `CFXTR1TradeExecutor` must only receive requests through `CFXTR1RiskDecision.CanExecute()`.
+
 ## Trade Executor
 
 The trade executor will isolate order placement and trade modification mechanics from strategies and risk rules.

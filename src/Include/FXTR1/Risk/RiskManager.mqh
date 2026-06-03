@@ -8,6 +8,8 @@
 #include <FXTR1/Risk/StopDistanceValidator.mqh>
 #include <FXTR1/Risk/SpreadFilter.mqh>
 #include <FXTR1/Risk/TradeModeValidator.mqh>
+#include <FXTR1/Risk/TradeRequestBuilder.mqh>
+#include <FXTR1/Risk/TradeRequestBuildResult.mqh>
 
 class CFXTR1RiskManager
 {
@@ -17,6 +19,7 @@ private:
    CFXTR1StopDistanceValidator m_stop_distance_validator;
    CFXTR1SpreadFilter m_spread_filter;
    CFXTR1FixedVolumeSizer m_fixed_volume_sizer;
+   CFXTR1TradeRequestBuilder m_trade_request_builder;
 
 public:
    CFXTR1RiskManager()
@@ -86,7 +89,16 @@ public:
          return decision;
       }
 
-      decision.RejectReason = "Risk evaluation is not implemented yet.";
+      CFXTR1TradeRequestBuildResult build_result = m_trade_request_builder.Build(request, size_result.Volume);
+      if(!build_result.IsSuccess())
+      {
+         decision.RejectReason = build_result.Message;
+         return decision;
+      }
+
+      decision.Request = build_result.Request;
+      decision.Approved = false;
+      decision.RejectReason = "Trade approval is not implemented yet.";
 
       return decision;
    }
