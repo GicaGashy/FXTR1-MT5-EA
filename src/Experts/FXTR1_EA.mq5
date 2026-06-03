@@ -8,6 +8,7 @@
 
 input bool  InpTradingEnabled = false;
 input bool  InpAllowNewEntries = false;
+input bool  InpRiskApprovalEnabled = false;
 input ulong InpMagicNumber = 1001001;
 input int   InpMaxSpreadPoints = 0;
 input double InpFixedVolume = 0.0;
@@ -28,6 +29,7 @@ int OnInit()
    settings.MagicNumber = InpMagicNumber;
    settings.TradingEnabled = InpTradingEnabled;
    settings.AllowNewEntries = InpAllowNewEntries;
+   settings.RiskApprovalEnabled = InpRiskApprovalEnabled;
    settings.MaxSpreadPoints = InpMaxSpreadPoints;
    settings.FixedVolume = InpFixedVolume;
    settings.StrategyMode = InpStrategyMode;

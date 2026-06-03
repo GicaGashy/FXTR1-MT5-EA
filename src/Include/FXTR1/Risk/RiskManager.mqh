@@ -97,8 +97,15 @@ public:
       }
 
       decision.Request = build_result.Request;
-      decision.Approved = false;
-      decision.RejectReason = "Trade approval is not implemented yet.";
+      if(!request.Settings.RiskApprovalEnabled)
+      {
+         decision.Approved = false;
+         decision.RejectReason = "Risk approval is disabled.";
+         return decision;
+      }
+
+      decision.Approved = true;
+      decision.RejectReason = "";
 
       return decision;
    }

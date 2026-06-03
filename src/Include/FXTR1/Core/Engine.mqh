@@ -53,6 +53,7 @@ public:
       m_settings.MagicNumber = settings.MagicNumber;
       m_settings.TradingEnabled = settings.TradingEnabled;
       m_settings.AllowNewEntries = settings.AllowNewEntries;
+      m_settings.RiskApprovalEnabled = settings.RiskApprovalEnabled;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
@@ -73,6 +74,7 @@ public:
       m_logger.Info("Magic number=" + StringFormat("%I64u", m_settings.MagicNumber));
       m_logger.Info("Trading enabled=" + BoolText(m_settings.TradingEnabled));
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
+      m_logger.Info("Risk approval enabled=" + BoolText(m_settings.RiskApprovalEnabled));
       m_logger.Info("Fixed volume=" + DoubleToString(m_settings.FixedVolume, 8));
       m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)

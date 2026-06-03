@@ -151,7 +151,13 @@ The sizer does not silently normalize volume yet. Passing fixed-volume sizing st
 
 `CFXTR1TradeRequestBuilder` converts a validated signal and validated volume into a prepared `CFXTR1TradeRequest`. When a signal does not provide `EntryPrice`, it uses Ask for BUY entries and Bid for SELL entries as the market reference price.
 
-Building a `CFXTR1TradeRequest` is not the same as approving a trade. `CFXTR1RiskDecision.Approved` remains `false` until explicit trade approval logic is implemented, and `CFXTR1TradeExecutor` must only receive requests through `CFXTR1RiskDecision.CanExecute()`.
+Building a `CFXTR1TradeRequest` is not the same as approving a trade. Approval is controlled separately by the explicit risk approval switch, and `CFXTR1TradeExecutor` must only receive requests through `CFXTR1RiskDecision.CanExecute()`.
+
+### Risk Approval Switch
+
+`RiskApprovalEnabled` defaults to `false`. Even if all validators pass and a `CFXTR1TradeRequest` is built, `CFXTR1RiskManager` rejects unless this switch is explicitly enabled.
+
+This allows safe pipeline testing before real execution exists. `CFXTR1TradeExecutor` still has no broker/order APIs, so enabling risk approval should still not place trades yet.
 
 ## Trade Executor
 

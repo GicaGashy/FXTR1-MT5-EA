@@ -13,6 +13,7 @@ public:
    ulong           MagicNumber;
    bool            TradingEnabled;
    bool            AllowNewEntries;
+   bool            RiskApprovalEnabled;
    int             MaxSpreadPoints;
    double          FixedVolume;
    ENUM_FXTR1_STRATEGY_MODE StrategyMode;
@@ -34,6 +35,7 @@ public:
       MagicNumber = 1001001;
       TradingEnabled = false;
       AllowNewEntries = false;
+      RiskApprovalEnabled = false;
       MaxSpreadPoints = 0;
       FixedVolume = 0.0;
       StrategyMode = FXTR1_STRATEGY_MODE_NULL;

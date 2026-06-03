@@ -32,6 +32,7 @@ public:
       m_settings.MagicNumber = settings.MagicNumber;
       m_settings.TradingEnabled = settings.TradingEnabled;
       m_settings.AllowNewEntries = settings.AllowNewEntries;
+      m_settings.RiskApprovalEnabled = settings.RiskApprovalEnabled;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
