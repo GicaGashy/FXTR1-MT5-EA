@@ -28,6 +28,17 @@ private:
       return value ? "true" : "false";
    }
 
+   string TradeDirectionText(const ENUM_FXTR1_TRADE_DIRECTION direction) const
+   {
+      if(direction == FXTR1_DIRECTION_BUY)
+         return "BUY";
+
+      if(direction == FXTR1_DIRECTION_SELL)
+         return "SELL";
+
+      return "Unknown";
+   }
+
 public:
    CFXTR1Engine()
    {
@@ -45,6 +56,10 @@ public:
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
+      m_settings.TestSignalEveryTicks = settings.TestSignalEveryTicks;
+      m_settings.TestSignalDirection = settings.TestSignalDirection;
+      m_settings.TestSignalStopLossPoints = settings.TestSignalStopLossPoints;
+      m_settings.TestSignalTakeProfitPoints = settings.TestSignalTakeProfitPoints;
 
       m_strategy_manager.Configure(settings);
    }
@@ -60,6 +75,13 @@ public:
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
       m_logger.Info("Fixed volume=" + DoubleToString(m_settings.FixedVolume, 8));
       m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
+      if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
+      {
+         m_logger.Info("Test signal every ticks=" + IntegerToString(m_settings.TestSignalEveryTicks));
+         m_logger.Info("Test signal direction=" + TradeDirectionText(m_settings.TestSignalDirection));
+         m_logger.Info("Test signal stop loss points=" + IntegerToString(m_settings.TestSignalStopLossPoints));
+         m_logger.Info("Test signal take profit points=" + IntegerToString(m_settings.TestSignalTakeProfitPoints));
+      }
 
       if(!m_strategy_manager.Initialize())
       {

@@ -5,6 +5,7 @@
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Strategy/StrategyMode.mqh>
 #include <FXTR1/Strategy/NullStrategy.mqh>
+#include <FXTR1/Strategy/TestSignalStrategy.mqh>
 #include <FXTR1/Core/StrategySignal.mqh>
 
 class CFXTR1StrategyManager
@@ -12,6 +13,7 @@ class CFXTR1StrategyManager
 private:
    CFXTR1Settings     m_settings;
    CFXTR1NullStrategy m_null_strategy;
+   CFXTR1TestSignalStrategy m_test_signal_strategy;
    bool               m_initialized;
    string             m_last_error;
 
@@ -33,6 +35,12 @@ public:
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
+      m_settings.TestSignalEveryTicks = settings.TestSignalEveryTicks;
+      m_settings.TestSignalDirection = settings.TestSignalDirection;
+      m_settings.TestSignalStopLossPoints = settings.TestSignalStopLossPoints;
+      m_settings.TestSignalTakeProfitPoints = settings.TestSignalTakeProfitPoints;
+
+      m_test_signal_strategy.Configure(settings);
    }
 
    bool Initialize()
@@ -50,6 +58,17 @@ public:
          return result;
       }
 
+      if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
+      {
+         const bool result = m_test_signal_strategy.Initialize();
+         m_initialized = result;
+
+         if(!result)
+            m_last_error = "TestSignalStrategy initialization failed.";
+
+         return result;
+      }
+
       m_initialized = false;
       m_last_error = "Unsupported strategy mode.";
       return false;
@@ -59,6 +78,8 @@ public:
    {
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_NULL)
          m_null_strategy.Deinitialize();
+      else if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
+         m_test_signal_strategy.Deinitialize();
 
       m_initialized = false;
    }
@@ -73,6 +94,9 @@ public:
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_NULL)
          return m_null_strategy.Evaluate(market);
 
+      if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
+         return m_test_signal_strategy.Evaluate(market);
+
       return signal;
    }
 
@@ -80,6 +104,9 @@ public:
    {
       if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_NULL)
          return "Null";
+
+      if(m_settings.StrategyMode == FXTR1_STRATEGY_MODE_TEST_SIGNAL)
+         return "TestSignal";
 
       return "Unknown";
    }

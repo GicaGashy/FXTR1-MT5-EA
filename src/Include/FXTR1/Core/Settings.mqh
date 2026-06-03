@@ -1,6 +1,7 @@
 #ifndef FXTR1_CORE_SETTINGS_MQH
 #define FXTR1_CORE_SETTINGS_MQH
 
+#include <FXTR1/Core/TradeDirection.mqh>
 #include <FXTR1/Strategy/StrategyMode.mqh>
 
 class CFXTR1Settings
@@ -15,6 +16,10 @@ public:
    int             MaxSpreadPoints;
    double          FixedVolume;
    ENUM_FXTR1_STRATEGY_MODE StrategyMode;
+   int             TestSignalEveryTicks;
+   ENUM_FXTR1_TRADE_DIRECTION TestSignalDirection;
+   int             TestSignalStopLossPoints;
+   int             TestSignalTakeProfitPoints;
 
    CFXTR1Settings()
    {
@@ -32,6 +37,10 @@ public:
       MaxSpreadPoints = 0;
       FixedVolume = 0.0;
       StrategyMode = FXTR1_STRATEGY_MODE_NULL;
+      TestSignalEveryTicks = 100;
+      TestSignalDirection = FXTR1_DIRECTION_BUY;
+      TestSignalStopLossPoints = 500;
+      TestSignalTakeProfitPoints = 1000;
    }
 
    bool HasValidSymbol() const

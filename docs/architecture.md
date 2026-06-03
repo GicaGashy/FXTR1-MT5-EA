@@ -53,6 +53,12 @@ Future voting, priority, and conflict handling belong in `CFXTR1SignalResolver`,
 
 `CFXTR1NullStrategy` must never produce trade signals. Its `Evaluate()` method returns an empty `CFXTR1StrategySignal`, so the engine stops before risk evaluation or trade execution during normal ticks.
 
+## Test Signal Strategy
+
+`CFXTR1TestSignalStrategy` exists only for pipeline validation. It can emit a deterministic entry signal every configured number of ticks when selected through strategy mode.
+
+It is disabled by default because `StrategyMode` defaults to Null, and it is not a real trading strategy. `CFXTR1RiskDecision.Approved` still remains false, so test signals cannot create live trades, and `CFXTR1TradeExecutor` still has no broker/order APIs.
+
 ## Runtime Settings and Safety Switches
 
 Runtime settings are centralized in `CFXTR1Settings` and are passed from `src/Experts/FXTR1_EA.mq5` inputs into the core engine during initialization. The engine stores this configuration and uses it as an explicit gate before any future signal can proceed to risk evaluation.
