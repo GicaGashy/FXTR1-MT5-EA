@@ -4,7 +4,7 @@
 #include <FXTR1/Core/Settings.mqh>
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskManager.mqh>
-#include <FXTR1/Strategy/NullStrategy.mqh>
+#include <FXTR1/Strategy/StrategyManager.mqh>
 #include <FXTR1/Trade/TradeExecutor.mqh>
 #include <FXTR1/Utils/Logger.mqh>
 
@@ -14,7 +14,7 @@ private:
    CFXTR1Logger        m_logger;
    CFXTR1Settings      m_settings;
    CFXTR1RiskManager   m_risk_manager;
-   CFXTR1NullStrategy  m_strategy;
+   CFXTR1StrategyManager m_strategy_manager;
    CFXTR1TradeExecutor m_trade_executor;
    bool                m_initialized;
 
@@ -39,6 +39,8 @@ public:
       m_settings.AllowNewEntries = settings.AllowNewEntries;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.StrategyMode = settings.StrategyMode;
+
+      m_strategy_manager.Configure(settings);
    }
 
    int OnInit()
@@ -52,16 +54,9 @@ public:
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
       m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
 
-      if(m_settings.StrategyMode != FXTR1_STRATEGY_MODE_NULL)
+      if(!m_strategy_manager.Initialize())
       {
-         m_logger.Error("Unsupported strategy mode: " + FXTR1StrategyModeToString(m_settings.StrategyMode));
-         m_initialized = false;
-         return INIT_FAILED;
-      }
-
-      if(!m_strategy.Initialize())
-      {
-         m_logger.Error("Strategy initialization failed");
+         m_logger.Error("Strategy manager initialization failed: " + m_strategy_manager.LastError());
          m_initialized = false;
          return INIT_FAILED;
       }
@@ -73,7 +68,7 @@ public:
    void OnDeinit(const int reason)
    {
       m_logger.Info("Deinitializing FXTR1 engine, reason=" + IntegerToString(reason));
-      m_strategy.Deinitialize();
+      m_strategy_manager.Deinitialize();
       m_initialized = false;
    }
 
@@ -82,7 +77,7 @@ public:
       if(!m_initialized)
          return;
 
-      CFXTR1StrategySignal signal = m_strategy.Evaluate();
+      CFXTR1StrategySignal signal = m_strategy_manager.Evaluate();
       if(!signal.HasSignal())
          return;
 

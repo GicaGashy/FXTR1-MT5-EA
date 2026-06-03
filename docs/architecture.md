@@ -35,6 +35,12 @@ Only `CFXTR1NullStrategy` is currently supported. Any unsupported mode is reject
 
 Future strategies will be added as plug-and-play modules behind the strategy contract. Strategy selection chooses which module is active; it is separate from any future signal resolution, voting, or multi-strategy orchestration.
 
+## StrategyManager
+
+`CFXTR1StrategyManager` owns strategy selection, initialization, deinitialization, and evaluation. The engine delegates strategy lifecycle and signal evaluation to the manager instead of owning strategy implementations directly.
+
+Only `CFXTR1NullStrategy` is currently supported. Future strategies will be plugged into `CFXTR1StrategyManager`, not directly into the engine, so the engine can keep coordinating the safe trading flow without knowing concrete strategy modules.
+
 ## NullStrategy
 
 `CFXTR1NullStrategy` is the current engine strategy implementation. It exists only to wire and compile-test the engine flow safely while the real architecture is being defined.
