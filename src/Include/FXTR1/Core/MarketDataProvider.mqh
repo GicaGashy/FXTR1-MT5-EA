@@ -22,8 +22,14 @@ public:
       snapshot.Point = SymbolInfoDouble(snapshot.Symbol, SYMBOL_POINT);
       snapshot.TickSize = SymbolInfoDouble(snapshot.Symbol, SYMBOL_TRADE_TICK_SIZE);
       snapshot.TickValue = SymbolInfoDouble(snapshot.Symbol, SYMBOL_TRADE_TICK_VALUE);
+      snapshot.VolumeMin = SymbolInfoDouble(snapshot.Symbol, SYMBOL_VOLUME_MIN);
+      snapshot.VolumeMax = SymbolInfoDouble(snapshot.Symbol, SYMBOL_VOLUME_MAX);
+      snapshot.VolumeStep = SymbolInfoDouble(snapshot.Symbol, SYMBOL_VOLUME_STEP);
       snapshot.Digits = (int)SymbolInfoInteger(snapshot.Symbol, SYMBOL_DIGITS);
       snapshot.SpreadPoints = (int)SymbolInfoInteger(snapshot.Symbol, SYMBOL_SPREAD);
+      snapshot.StopsLevelPoints = (int)SymbolInfoInteger(snapshot.Symbol, SYMBOL_TRADE_STOPS_LEVEL);
+      snapshot.FreezeLevelPoints = (int)SymbolInfoInteger(snapshot.Symbol, SYMBOL_TRADE_FREEZE_LEVEL);
+      snapshot.TradeMode = SymbolInfoInteger(snapshot.Symbol, SYMBOL_TRADE_MODE);
       snapshot.IsValid = snapshot.HasValidSymbol() && snapshot.HasValidPrices();
 
       return snapshot;

@@ -67,6 +67,12 @@ The engine captures market data once per tick through `CFXTR1MarketDataProvider`
 
 This keeps strategy modules cleaner and makes future strategy inputs easier to review, test, and constrain.
 
+### Symbol Trading Constraints
+
+`CFXTR1MarketSnapshot` also captures broker symbol constraints such as volume limits, volume step, stop level, freeze level, and trade mode. These constraints will later be used by lot sizing and stop-distance validation.
+
+Strategies should not hardcode volume limits, stop levels, or broker rules.
+
 ## Core Trading Flow
 
 The planned future trading flow is intentionally staged so that each module has one clear responsibility:

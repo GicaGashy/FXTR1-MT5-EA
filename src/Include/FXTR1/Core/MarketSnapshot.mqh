@@ -15,6 +15,12 @@ public:
    int             Digits;
    double          TickSize;
    double          TickValue;
+   double          VolumeMin;
+   double          VolumeMax;
+   double          VolumeStep;
+   int             StopsLevelPoints;
+   int             FreezeLevelPoints;
+   long            TradeMode;
 
    CFXTR1MarketSnapshot()
    {
@@ -34,6 +40,12 @@ public:
       Digits = 0;
       TickSize = 0.0;
       TickValue = 0.0;
+      VolumeMin = 0.0;
+      VolumeMax = 0.0;
+      VolumeStep = 0.0;
+      StopsLevelPoints = 0;
+      FreezeLevelPoints = 0;
+      TradeMode = 0;
    }
 
    bool HasValidPrices() const
@@ -47,6 +59,20 @@ public:
    bool HasValidSymbol() const
    {
       return StringLen(Symbol) > 0;
+   }
+
+   bool HasValidVolumeConstraints() const
+   {
+      return VolumeMin > 0.0
+             && VolumeMax >= VolumeMin
+             && VolumeStep > 0.0;
+   }
+
+   bool HasValidStopConstraints() const
+   {
+      return Point > 0.0
+             && StopsLevelPoints >= 0
+             && FreezeLevelPoints >= 0;
    }
 };
 
