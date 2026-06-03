@@ -105,6 +105,12 @@ Initial constraints:
 - No unsafe lot scaling.
 - No hidden recovery sizing.
 
+### Signal Validator
+
+`CFXTR1SignalValidator` checks entry signal structure before risk approval. Entry signals must have a valid buy or sell direction and a defined stop loss.
+
+Take profit is optional for now, but when provided it must be on the correct side of the entry reference. Passing `CFXTR1SignalValidator` does not approve a trade yet.
+
 ### Spread Filter
 
 `CFXTR1SpreadFilter` is the first modular risk check. It validates the current market spread against `MaxSpreadPoints` from runtime settings.

@@ -3,11 +3,13 @@
 
 #include <FXTR1/Risk/RiskDecision.mqh>
 #include <FXTR1/Risk/RiskEvaluationRequest.mqh>
+#include <FXTR1/Risk/SignalValidator.mqh>
 #include <FXTR1/Risk/SpreadFilter.mqh>
 
 class CFXTR1RiskManager
 {
 private:
+   CFXTR1SignalValidator m_signal_validator;
    CFXTR1SpreadFilter m_spread_filter;
 
 public:
@@ -40,6 +42,13 @@ public:
       if(!request.Settings.HasValidSymbol())
       {
          decision.RejectReason = "Invalid settings symbol.";
+         return decision;
+      }
+
+      CFXTR1RiskCheckResult signal_check = m_signal_validator.Check(request);
+      if(!signal_check.IsPassed())
+      {
+         decision.RejectReason = signal_check.Message;
          return decision;
       }
 
