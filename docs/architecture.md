@@ -27,18 +27,27 @@ Current status:
 - No concrete strategy is implemented.
 - No signal generation is implemented.
 
+## NullStrategy
+
+`CFXTR1NullStrategy` is the current engine strategy implementation. It exists only to wire and compile-test the engine flow safely while the real architecture is being defined.
+
+`CFXTR1NullStrategy` must never produce trade signals. Its `Evaluate()` method returns an empty `CFXTR1StrategySignal`, so the engine stops before risk evaluation or trade execution during normal ticks.
+
 ## Core Trading Flow
 
 The planned future trading flow is intentionally staged so that each module has one clear responsibility:
 
 1. Strategy evaluates the market.
 2. Strategy returns a `CFXTR1StrategySignal`.
-3. Risk manager validates the signal and account constraints.
-4. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
-5. Trade executor executes only validated trade requests.
-6. Position manager manages open trades after execution.
+3. Risk manager evaluates the signal and account constraints into a `CFXTR1RiskDecision`.
+4. Risk decision records whether the signal was approved or rejected and why.
+5. Risk manager eventually transforms or approves the signal into a `CFXTR1TradeRequest`.
+6. Trade executor executes only approved executable trade requests.
+7. Position manager manages open trades after execution.
 
 `CFXTR1StrategySignal` is not executed directly. It is an intent object from a strategy, and future risk checks must approve or prepare it before it can become a `CFXTR1TradeRequest`.
+
+`CFXTR1TradeExecutor` should eventually only receive approved requests where the `CFXTR1RiskDecision` is executable.
 
 This flow is architectural only at this stage. No concrete strategy, order placement, or position management behavior is implemented yet.
 
