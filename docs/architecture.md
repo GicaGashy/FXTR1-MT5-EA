@@ -27,6 +27,18 @@ Current status:
 - No concrete strategy is implemented.
 - No signal generation is implemented.
 
+## Core Trading Flow
+
+The planned future trading flow is intentionally staged so that each module has one clear responsibility:
+
+1. Strategy evaluates the market.
+2. Strategy returns a `CFXTR1StrategySignal`.
+3. Risk manager validates the signal and account constraints.
+4. Trade executor executes only validated actions.
+5. Position manager manages open trades after execution.
+
+This flow is architectural only at this stage. No concrete strategy, order placement, or position management behavior is implemented yet.
+
 ## Risk Manager
 
 The risk manager will own risk validation before any future trade action is allowed.

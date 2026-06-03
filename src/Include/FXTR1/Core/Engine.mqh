@@ -2,6 +2,7 @@
 #define FXTR1_CORE_ENGINE_MQH
 
 #include <FXTR1/Risk/RiskManager.mqh>
+#include <FXTR1/Strategy/IStrategy.mqh>
 #include <FXTR1/Trade/TradeExecutor.mqh>
 #include <FXTR1/Utils/Logger.mqh>
 
