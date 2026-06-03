@@ -14,8 +14,10 @@ public:
    bool            TradingEnabled;
    bool            AllowNewEntries;
    bool            RiskApprovalEnabled;
+   bool            ExecutionEnabled;
    int             MaxSpreadPoints;
    int             MaxOpenPositions;
+   int             DeviationPoints;
    double          FixedVolume;
    ENUM_FXTR1_STRATEGY_MODE StrategyMode;
    int             TestSignalEveryTicks;
@@ -37,8 +39,10 @@ public:
       TradingEnabled = false;
       AllowNewEntries = false;
       RiskApprovalEnabled = false;
+      ExecutionEnabled = false;
       MaxSpreadPoints = 0;
       MaxOpenPositions = 1;
+      DeviationPoints = 20;
       FixedVolume = 0.0;
       StrategyMode = FXTR1_STRATEGY_MODE_NULL;
       TestSignalEveryTicks = 100;

@@ -9,9 +9,11 @@
 input bool  InpTradingEnabled = false;
 input bool  InpAllowNewEntries = false;
 input bool  InpRiskApprovalEnabled = false;
+input bool  InpExecutionEnabled = false;
 input ulong InpMagicNumber = 1001001;
 input int   InpMaxSpreadPoints = 0;
 input int   InpMaxOpenPositions = 1;
+input int   InpDeviationPoints = 20;
 input double InpFixedVolume = 0.0;
 input ENUM_FXTR1_STRATEGY_MODE InpStrategyMode = FXTR1_STRATEGY_MODE_NULL;
 input int InpTestSignalEveryTicks = 100;
@@ -31,8 +33,10 @@ int OnInit()
    settings.TradingEnabled = InpTradingEnabled;
    settings.AllowNewEntries = InpAllowNewEntries;
    settings.RiskApprovalEnabled = InpRiskApprovalEnabled;
+   settings.ExecutionEnabled = InpExecutionEnabled;
    settings.MaxSpreadPoints = InpMaxSpreadPoints;
    settings.MaxOpenPositions = InpMaxOpenPositions;
+   settings.DeviationPoints = InpDeviationPoints;
    settings.FixedVolume = InpFixedVolume;
    settings.StrategyMode = InpStrategyMode;
    settings.TestSignalEveryTicks = InpTestSignalEveryTicks;

@@ -1,6 +1,6 @@
 # FXTR1 Architecture
 
-This document captures the initial high-level architecture for FXTR1. The current project is a skeleton only; no strategy or trading logic is implemented yet.
+This document captures the initial high-level architecture for FXTR1. The current project has only guarded pipeline components and minimal market execution; no real strategy logic is implemented yet.
 
 ## Main EA Entry
 
@@ -57,7 +57,7 @@ Future voting, priority, and conflict handling belong in `CFXTR1SignalResolver`,
 
 `CFXTR1TestSignalStrategy` exists only for pipeline validation. It can emit a deterministic entry signal every configured number of ticks when selected through strategy mode.
 
-It is disabled by default because `StrategyMode` defaults to Null, and it is not a real trading strategy. `CFXTR1RiskDecision.Approved` still remains false, so test signals cannot create live trades, and `CFXTR1TradeExecutor` still has no broker/order APIs.
+It is disabled by default because `StrategyMode` defaults to Null, and it is not a real trading strategy. Test signals cannot create trades unless the runtime entry, risk approval, and execution switches are all explicitly enabled.
 
 ## Runtime Settings and Safety Switches
 
@@ -163,16 +163,24 @@ Building a `CFXTR1TradeRequest` is not the same as approving a trade. Approval i
 
 `RiskApprovalEnabled` defaults to `false`. Even if all validators pass and a `CFXTR1TradeRequest` is built, `CFXTR1RiskManager` rejects unless this switch is explicitly enabled.
 
-This allows safe pipeline testing before real execution exists. `CFXTR1TradeExecutor` still has no broker/order APIs, so enabling risk approval should still not place trades yet.
+This allows safe pipeline testing before execution is explicitly enabled. Risk approval alone does not place trades because execution has its own separate safety switch.
 
 ## Trade Executor
 
-The trade executor will isolate order placement and trade modification mechanics from strategies and risk rules.
+The trade executor isolates order placement mechanics from strategies and risk rules.
 
 Current status:
 
-- Class placeholder exists.
-- No order placement is implemented.
+- Minimal market BUY/SELL execution exists behind an explicit safety switch.
+- No position management, pending orders, exits, trailing stop, break-even, or partial closes are implemented.
+
+### Minimal Market Execution
+
+`CFXTR1TradeExecutor` uses MQL5 `CTrade` for market BUY/SELL orders only. `ExecutionEnabled` defaults to `false`, and the executor returns without placing orders while it remains disabled.
+
+Orders can only be attempted after `TradingEnabled`, `AllowNewEntries`, `RiskApprovalEnabled`, and `ExecutionEnabled` are all explicitly true. The executor is mechanical: it receives an approved executable `CFXTR1TradeRequest` and does not decide strategy, risk approval, or sizing.
+
+Position management, exits, trailing stops, break-even, partial closes, and pending orders are not implemented yet.
 
 ## Position Manager
 

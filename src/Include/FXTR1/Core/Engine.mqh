@@ -56,8 +56,10 @@ public:
       m_settings.TradingEnabled = settings.TradingEnabled;
       m_settings.AllowNewEntries = settings.AllowNewEntries;
       m_settings.RiskApprovalEnabled = settings.RiskApprovalEnabled;
+      m_settings.ExecutionEnabled = settings.ExecutionEnabled;
       m_settings.MaxSpreadPoints = settings.MaxSpreadPoints;
       m_settings.MaxOpenPositions = settings.MaxOpenPositions;
+      m_settings.DeviationPoints = settings.DeviationPoints;
       m_settings.FixedVolume = settings.FixedVolume;
       m_settings.StrategyMode = settings.StrategyMode;
       m_settings.TestSignalEveryTicks = settings.TestSignalEveryTicks;
@@ -66,6 +68,7 @@ public:
       m_settings.TestSignalTakeProfitPoints = settings.TestSignalTakeProfitPoints;
 
       m_strategy_manager.Configure(settings);
+      m_trade_executor.Configure(settings);
    }
 
    int OnInit()
@@ -78,6 +81,8 @@ public:
       m_logger.Info("Trading enabled=" + BoolText(m_settings.TradingEnabled));
       m_logger.Info("Allow new entries=" + BoolText(m_settings.AllowNewEntries));
       m_logger.Info("Risk approval enabled=" + BoolText(m_settings.RiskApprovalEnabled));
+      m_logger.Info("Execution enabled=" + BoolText(m_settings.ExecutionEnabled));
+      m_logger.Info("Deviation points=" + IntegerToString(m_settings.DeviationPoints));
       m_logger.Info("Max open positions=" + IntegerToString(m_settings.MaxOpenPositions));
       m_logger.Info("Fixed volume=" + DoubleToString(m_settings.FixedVolume, 8));
       m_logger.Info("Strategy mode=" + FXTR1StrategyModeToString(m_settings.StrategyMode));
@@ -157,7 +162,12 @@ public:
 
       CFXTR1ExecutionResult execution_result = m_trade_executor.Execute(decision.Request);
       if(!execution_result.IsSuccess())
+      {
          m_logger.Error("Trade execution failed: " + execution_result.Message);
+         return;
+      }
+
+      m_logger.Info("Trade execution succeeded: " + execution_result.Message);
    }
 };
 
